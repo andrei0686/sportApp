@@ -14,8 +14,4 @@
 1. [Анализ и описание архитектурных опций](./ARCH_OPTIONS.md)
 1. [ADRs](ADRs/README.md)
 
-
-* [диаграммы](diagrams/README.md)
-
-* [требования](requirements/README.md)
  
