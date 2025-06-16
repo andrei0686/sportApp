@@ -1,4 +1,4 @@
 # Требования
-*[бизнес](business.md)
-*[НФТ](business.md)
+* [бизнес](business.md)
+* [НФТ](business.md)
 
