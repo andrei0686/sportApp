@@ -10,12 +10,13 @@
 1. [План поэтапной разработки](./PLAN.md)
 1. [Бизнес сценарии](./SCENARIOS.md)
 1. [Атрибуты качества](./ATRIBUTS.md)
+1. [Не функциональные требования](requirements/НФТ.md)
 
 
-1. [Не функциональные требования](requirements/ФТ.md)
 1. [ADRs](ADRs/README.md)
 
-1. [диаграммы](diagrams/README.md)
+
+* [диаграммы](diagrams/README.md)
 
 * [требования](requirements/README.md)
  
