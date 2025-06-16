@@ -2,6 +2,8 @@
 # описание
 архитектура приложения компании по продажи спортивного инвентаря
 
-[ADRs](ADRs/readme.md)
-[диаграммы](diagrams/readme.md)
-[требования](requirements/readme.md)
+* [ADRs](ADRs)
+
+* [диаграммы](diagrams)
+
+* [требования](requirements)
