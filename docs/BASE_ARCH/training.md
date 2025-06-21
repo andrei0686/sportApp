@@ -23,7 +23,7 @@ flowchart
 | date | DateTime | Дата и время начала тренировки. |
 | duration | Integer | Продолжительность тренировки в минутах. |
 | distance | Float | Пройденное расстояние в километрах (для беговых тренировок). |
-| caloriesBurned | Integer | Количество сожжённых калорий. |
+| calories | Integer | Количество сожжённых калорий. |
 | notes | String | Примечания пользователя о тренировке (макс. 1000 символов). |
 | equipment |Array<UUID>| ID инвентаря, использованного во время тренировки. Связь с Equipment. |
 
@@ -36,7 +36,7 @@ flowchart
   "date": "2025-06-01T08:00:00Z",
   "duration": 30,
   "distance": 5.2,
-  "caloriesBurned": 250,
+  "calories": 250,
   "notes": "Бег по парку, хорошая погода.",
   "equipment": ["750e8400-e29b-41d4-a716-446655440003", "750e8400-e29b-41d4-a716-446655440004"]
 }
@@ -102,7 +102,7 @@ flowchart
 | Свойство | Тип | Описание |
 | --- | --- | --- |
 | userId | UUID | ID пользователя, для которого проводится аналитика. Связь с User. |
-| metrics | Object | Метрики прогресса тренировок: { totalDistance: Float, totalCaloriesBurned: Integer, averageDuration: Integer }. |
+| metrics | Object | Метрики прогресса тренировок: { totalDistance: Float, totalCalories: Integer, averageDuration: Integer }. |
 | recommendations | Array | Рекомендации для улучшения тренировок. |
 
 **Пример:**
@@ -111,7 +111,7 @@ flowchart
   "userId": "a50e8400-e29b-41d4-a716-446655440001",
   "metrics": {
     "totalDistance": 25.6,
-    "totalCaloriesBurned": 1250,
+    "totalCalories": 1250,
     "averageDuration": 35
   },
   "recommendations": ["Увеличить продолжительность тренировок", "Добавить силовые упражнения"]
