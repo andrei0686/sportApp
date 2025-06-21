@@ -14,4 +14,4 @@
 1. [Анализ и описание архитектурных опций](./ARCH_OPTIONS.md)
 1. [ADRs](ADRs/README.md)
 1. [Сценарии использования](usecase/README.md)
-1. [Базовая архитектура](./BASE_ARHC.md) 
+1. [Базовая архитектура](./BASE_ARCH/readme.md) 

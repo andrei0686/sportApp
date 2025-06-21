@@ -1,5 +1,12 @@
 ## Домен социальный
-
+### Диаграмма связи сущностей
+```mermaid
+flowchart
+    user --- message  
+    user --- FriendRequest 
+    chat --- message  
+    user --- chat  
+```
 ### Cущности
 #### Cообщение
 Отправленное сообщение в личном или групповом чате.
@@ -101,11 +108,3 @@
 }
 ```
 
-#### Диаграмма связи сущностей
-```mermaid
-flowchart
-    user --- message  
-    user --- FriendRequest 
-    chat --- message  
-    user --- chat  
-```
