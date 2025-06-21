@@ -1,0 +1,72 @@
+openapi: 3.0.1
+info:
+  title: Inventory API
+  description: API for managing sports equipment and recommendations.
+  version: 1.0.0
+paths:
+  /equipment:
+    get:
+      summary: Get all equipment
+      operationId: getEquipment
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Equipment'
+  /recommendations:
+    get:
+      summary: Get all recommendations
+      operationId: getRecommendations
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recommendation'
+components:
+  schemas:
+    Equipment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        purchaseDate:
+          type: string
+          format: date
+        usageCount:
+          type: integer
+    Recommendation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        equipmentId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        reason:
+          type: string
+        suggestedEquipment:
+          $ref: '#/components/schemas/Equipment'
