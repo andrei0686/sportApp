@@ -446,7 +446,7 @@ components:
 security:
   - bearerAuth: []
 paths:
-  /users/{userId}:
+  /v1/users/{userId}:
     get:
       summary: Получить данные пользователя
       tags:
@@ -500,7 +500,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /users/{userId}/profile:
+  /v1/users/{userId}/profile:
     get:
       summary: Получить профиль пользователя
       tags:
@@ -542,7 +542,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserProfile'
-  /users/{userId}/friends:
+  /v1/users/{userId}/friends:
     get:
       summary: Получить список друзей
       tags:
@@ -578,7 +578,7 @@ paths:
                       $ref: '#/components/schemas/User'
                   pagination:
                     $ref: '#/components/schemas/Pagination'
-  /users/{userId}/friend-requests:
+  /v1/users/{userId}/friend-requests:
     get:
       summary: Получить список запросов в друзья
       tags:
@@ -648,7 +648,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FriendRequest'
-  /users/{userId}/friend-requests/{requestId}:
+  /v1/users/{userId}/friend-requests/{requestId}:
     put:
       summary: Подтвердить/Отклонить запрос в друзья
       tags:
@@ -684,7 +684,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FriendRequest'
-  /users/{userId}/workouts:
+  /v1/users/{userId}/workouts:
     get:
       summary: Получить историю тренировок
       tags:
@@ -757,7 +757,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Workout'
-  /users/{userId}/workouts/{workoutId}:
+  /v1/users/{userId}/workouts/{workoutId}:
     get:
       summary: Получить информацию о тренировке
       tags:
@@ -831,7 +831,7 @@ paths:
       responses:
         '204':
           description: Тренировка удалена
-  /users/{userId}/analytics:
+  /v1/users/{userId}/analytics:
     get:
       summary: Получить аналитику тренировок
       tags:
@@ -860,7 +860,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Analytics'
-  /users/{userId}/training-programs:
+  /v1/users/{userId}/training-programs:
     get:
       summary: Получить программы тренировок
       tags:
@@ -919,7 +919,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TrainingProgram'
-  /users/{userId}/equipment:
+  /v1/users/{userId}/equipment:
     get:
       summary: Получить список экипировки
       tags:
@@ -982,7 +982,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Equipment'
-  /users/{userId}/equipment-recommendations:
+  /v1/users/{userId}/equipment-recommendations:
     get:
       summary: Получить рекомендации по экипировке
       tags:
@@ -1003,7 +1003,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/EquipmentRecommendation'
-  /users/{userId}/devices:
+  /v1/users/{userId}/devices:
     get:
       summary: Получить список устройств пользователя
       tags:
@@ -1047,7 +1047,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Device'
-  /users/{userId}/devices/{deviceId}/data:
+  /v1/users/{userId}/devices/{deviceId}/data:
     post:
       summary: Добавить данные с устройства
       tags:
@@ -1077,7 +1077,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceData'
-  /users/{userId}/achievements:
+  /v1/users/{userId}/achievements:
     get:
       summary: Получить список достижений
       tags:
@@ -1098,7 +1098,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Achievement'
-  /leaderboards:
+  /v1/leaderboards:
     get:
       summary: Получить таблицу лидеров
       tags:
@@ -1136,7 +1136,7 @@ paths:
                       $ref: '#/components/schemas/Leaderboard'
                   pagination:
                     $ref: '#/components/schemas/Pagination'
-  /challenges:
+  /v1/challenges:
     get:
       summary: Получить список испытаний
       tags:
@@ -1171,7 +1171,7 @@ paths:
                       $ref: '#/components/schemas/Challenge'
                   pagination:
                     $ref: '#/components/schemas/Pagination'
-  /users/{userId}/challenges/{challengeId}/join:
+  /v1/users/{userId}/challenges/{challengeId}/join:
     post:
       summary: Присоединиться к испытанию
       tags:
@@ -1199,7 +1199,7 @@ paths:
                 properties:
                   message:
                     type: string
-  /chats:
+  /v1/chats:
     post:
       summary: Создать чат
       tags:
@@ -1216,7 +1216,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Chat'
-  /chats/{chatId}:
+  /v1/chats/{chatId}:
     get:
       summary: Получить информацию о чате
       tags:
@@ -1235,7 +1235,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Chat'
-  /chats/{chatId}/messages:
+  /v1/chats/{chatId}/messages:
     get:
       summary: Получить сообщения в чате
       tags:
@@ -1294,7 +1294,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
-  /chats/{chatId}/messages/{messageId}:
+  /v1/chats/{chatId}/messages/{messageId}:
     put:
       summary: Редактировать сообщение
       tags:
