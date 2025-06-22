@@ -25,7 +25,7 @@ flowchart
 | usageCount | Integer | Количество использований инвентаря. |
 
 **Пример:**
-```json
+```
 {
   "id": "b50e8400-e29b-41d4-a716-446655440001",
   "userId": "b50e8400-e29b-41d4-a716-446655440002",
@@ -51,7 +51,7 @@ flowchart
 | suggestedEquipment | Object | Рекомендуемые товары: { type: Enum, brand: String, model: String }. |
 
 **Пример:**
-```json
+```
 {
   "id": "c50e8400-e29b-41d4-a716-446655440001",
   "userId": "c50e8400-e29b-41d4-a716-446655440002",
@@ -65,3 +65,4 @@ flowchart
   }
 }
 ```
+

@@ -53,7 +53,7 @@ flowchart
   "type": "group",
   "users": ["650e8400-e29b-41d4-a716-446655440001", "650e8400-e29b-41d4-a716-446655440002"],
   "title": "Бегуны",
-  "createdAt": "2023-09-15T10:00:00Z",
+  "createdAt": "2025-03-15T10:00:00Z",
   "lastMessageId": "msg_123"
 }
 ```
