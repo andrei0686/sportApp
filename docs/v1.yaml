@@ -1,37 +1,271 @@
-openapi: 3.0.1
+openapi: 3.0.0
 info:
-  title: Inventory API
-  description: API for managing sports equipment and recommendations.
-  version: 1.0.0
-paths:
-  /equipment:
-    get:
-      summary: Get all equipment
-      operationId: getEquipment
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Equipment'
-  /recommendations:
-    get:
-      summary: Get all recommendations
-      operationId: getRecommendations
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Recommendation'
+  title: SportApp API
+  description: API для спортивного приложения с поддержкой социальных функций, тренировок, аналитики и геймификации.
+  version: v1
+servers:
+  - url: https://api.sportapp.com/v1
+    description: Production server
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          default: 1
+        limit:
+          type: integer
+          default: 10
+        total:
+          type: integer
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - username
+        - email
+    UserProfile:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          type: string
+        profilePicture:
+          type: string
+        preferredLanguage:
+          type: string
+        region:
+          type: string
+        sportPreferences:
+          type: array
+          items:
+            type: string
+      required:
+        - userId
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        senderId:
+          type: string
+          format: uuid
+        chatId:
+          type: string
+          format: uuid
+        content:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [sent, delivered, read]
+        replyTo:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+        - id
+        - senderId
+        - chatId
+        - content
+        - timestamp
+    Chat:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [personal, group]
+        users:
+          type: array
+          items:
+            type: string
+            format: uuid
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        lastMessageId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+        - id
+        - type
+        - users
+        - createdAt
+    FriendRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fromUserId:
+          type: string
+          format: uuid
+        toUserId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - fromUserId
+        - toUserId
+        - status
+        - createdAt
+    Workout:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        date:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+        distance:
+          type: number
+          format: float
+        calories:
+          type: integer
+        notes:
+          type: string
+          nullable: true
+        equipment:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+        - id
+        - userId
+        - type
+        - date
+    WorkoutHistory:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        workouts:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+        - userId
+    TrainingProgram:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        workouts:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              date:
+                type: string
+                format: date-time
+              duration:
+                type: integer
+      required:
+        - id
+        - userId
+        - name
+        - startDate
+        - endDate
+    Analytics:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        metrics:
+          type: object
+          properties:
+            totalDistance:
+              type: number
+              format: float
+            totalCalories:
+              type: integer
+            averageDuration:
+              type: integer
+        recommendations:
+          type: array
+          items:
+            type: string
+      required:
+        - userId
+        - metrics
     Equipment:
       type: object
       properties:
@@ -52,7 +286,11 @@ components:
           format: date
         usageCount:
           type: integer
-    Recommendation:
+      required:
+        - id
+        - userId
+        - type
+    EquipmentRecommendation:
       type: object
       properties:
         id:
@@ -66,7 +304,1046 @@ components:
           format: uuid
         type:
           type: string
+          enum: [update, replace, add]
         reason:
           type: string
         suggestedEquipment:
-          $ref: '#/components/schemas/Equipment'
+          type: object
+          properties:
+            type:
+              type: string
+            brand:
+              type: string
+            model:
+              type: string
+      required:
+        - id
+        - userId
+        - equipmentId
+        - type
+        - reason
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        connectionStatus:
+          type: string
+          enum: [connected, disconnected]
+      required:
+        - id
+        - userId
+        - type
+        - connectionStatus
+    DeviceData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        deviceId:
+          type: string
+          format: uuid
+        dataType:
+          type: string
+        value:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - id
+        - userId
+        - deviceId
+        - dataType
+        - value
+        - timestamp
+    Achievement:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        dateEarned:
+          type: string
+          format: date-time
+      required:
+        - id
+        - userId
+        - name
+        - dateEarned
+    Leaderboard:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        rank:
+          type: integer
+        score:
+          type: number
+        metric:
+          type: string
+      required:
+        - id
+        - userId
+        - rank
+        - score
+        - metric
+    Challenge:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        participants:
+          type: array
+          items:
+            type: string
+            format: uuid
+        goal:
+          type: string
+      required:
+        - id
+        - name
+        - startDate
+        - endDate
+        - goal
+security:
+  - bearerAuth: []
+paths:
+  /users/{userId}:
+    get:
+      summary: Получить данные пользователя
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Данные пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Обновить данные пользователя
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Данные пользователя обновлены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{userId}/profile:
+    get:
+      summary: Получить профиль пользователя
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Профиль пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+    put:
+      summary: Обновить профиль пользователя
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+      responses:
+        '200':
+          description: Профиль обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+  /users/{userId}/friends:
+    get:
+      summary: Получить список друзей
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Список друзей
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+  /users/{userId}/friend-requests:
+    get:
+      summary: Получить список запросов в друзья
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, accepted, rejected]
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Список запросов в друзья
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FriendRequest'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      summary: Отправить запрос в друзья
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                toUserId:
+                  type: string
+                  format: uuid
+              required:
+                - toUserId
+      responses:
+        '201':
+          description: Запрос отправлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendRequest'
+  /users/{userId}/friend-requests/{requestId}:
+    put:
+      summary: Подтвердить/Отклонить запрос в друзья
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: requestId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [accepted, rejected]
+              required:
+                - status
+      responses:
+        '200':
+          description: Статус обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendRequest'
+  /users/{userId}/workouts:
+    get:
+      summary: Получить историю тренировок
+      tags:
+        - Workouts
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: История тренировок
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Workout'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      summary: Добавить тренировку
+      tags:
+        - Workouts
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workout'
+      responses:
+        '201':
+          description: Тренировка добавлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+  /users/{userId}/workouts/{workoutId}:
+    get:
+      summary: Получить информацию о тренировке
+      tags:
+        - Workouts
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: workoutId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Информация о тренировке
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+    put:
+      summary: Обновить информацию о тренировке
+      tags:
+        - Workouts
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: workoutId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workout'
+      responses:
+        '200':
+          description: Тренировка обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workout'
+    delete:
+      summary: Удалить тренировку
+      tags:
+        - Workouts
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: workoutId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Тренировка удалена
+  /users/{userId}/analytics:
+    get:
+      summary: Получить аналитику тренировок
+      tags:
+        - Analytics
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Аналитика тренировок
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analytics'
+  /users/{userId}/training-programs:
+    get:
+      summary: Получить программы тренировок
+      tags:
+        - TrainingPrograms
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Список программ тренировок
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TrainingProgram'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      summary: Создать программу тренировок
+      tags:
+        - TrainingPrograms
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingProgram'
+      responses:
+        '201':
+          description: Программа тренировок создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingProgram'
+  /users/{userId}/equipment:
+    get:
+      summary: Получить список экипировки
+      tags:
+        - Equipment
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Список экипировки
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Equipment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      summary: Добавить экипировку
+      tags:
+        - Equipment
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Equipment'
+      responses:
+        '201':
+          description: Экипировка добавлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Equipment'
+  /users/{userId}/equipment-recommendations:
+    get:
+      summary: Получить рекомендации по экипировке
+      tags:
+        - Equipment
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Рекомендации по экипировке
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EquipmentRecommendation'
+  /users/{userId}/devices:
+    get:
+      summary: Получить список устройств пользователя
+      tags:
+        - Devices
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Список устройств
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+    post:
+      summary: Добавить устройство
+      tags:
+        - Devices
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+      responses:
+        '201':
+          description: Устройство добавлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+  /users/{userId}/devices/{deviceId}/data:
+    post:
+      summary: Добавить данные с устройства
+      tags:
+        - Devices
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: deviceId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceData'
+      responses:
+        '201':
+          description: Данные добавлены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceData'
+  /users/{userId}/achievements:
+    get:
+      summary: Получить список достижений
+      tags:
+        - Gamification
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Список достижений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Achievement'
+  /leaderboards:
+    get:
+      summary: Получить таблицу лидеров
+      tags:
+        - Gamification
+      parameters:
+        - in: query
+          name: metric
+          schema:
+            type: string
+        - in: query
+          name: region
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Таблица лидеров
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Leaderboard'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+  /challenges:
+    get:
+      summary: Получить список испытаний
+      tags:
+        - Gamification
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [active, completed, upcoming]
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Список испытаний
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Challenge'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+  /users/{userId}/challenges/{challengeId}/join:
+    post:
+      summary: Присоединиться к испытанию
+      tags:
+        - Gamification
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: challengeId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное присоединение
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /chats:
+    post:
+      summary: Создать чат
+      tags:
+        - Social
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chat'
+      responses:
+        '201':
+          description: Чат создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+  /chats/{chatId}:
+    get:
+      summary: Получить информацию о чате
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Информация о чате
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+  /chats/{chatId}/messages:
+    get:
+      summary: Получить сообщения в чате
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Сообщения в чате
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      summary: Отправить сообщение
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '201':
+          description: Сообщение отправлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /chats/{chatId}/messages/{messageId}:
+    put:
+      summary: Редактировать сообщение
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: messageId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Сообщение обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    delete:
+      summary: Удалить сообщение
+      tags:
+        - Social
+      parameters:
+        - in: path
+          name: chatId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: messageId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Сообщение удалено
