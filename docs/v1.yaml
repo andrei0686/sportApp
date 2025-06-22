@@ -835,7 +835,7 @@ paths:
     get:
       summary: Получить аналитику тренировок
       tags:
-        - Analytics
+        - Workouts
       parameters:
         - in: path
           name: userId
@@ -864,7 +864,7 @@ paths:
     get:
       summary: Получить программы тренировок
       tags:
-        - TrainingPrograms
+        - Workouts
       parameters:
         - in: path
           name: userId
@@ -899,7 +899,7 @@ paths:
     post:
       summary: Создать программу тренировок
       tags:
-        - TrainingPrograms
+        - Workouts
       parameters:
         - in: path
           name: userId
