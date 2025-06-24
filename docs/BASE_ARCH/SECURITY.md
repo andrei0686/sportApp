@@ -28,26 +28,7 @@ flowchart
   "roles": ["user"]
 }
 ```
-
-#### Сущность «OAuth 2.0 Клиент» (OAuth 2.0 Client)
-
-**Описание:** информация о клиенте, который использует OAuth 2.0 для аутентификации пользователей.
-
-| Свойство | Тип | Описание |
-| --- | --- | --- |
-| clientId | String | Идентификатор клиента. |
-| clientSecret | String | Секретный ключ клиента. |
-| redirectUri | String | URI для перенаправления после аутентификации. |
-
-**Пример:**
-```
-{
-  "clientId": "client_id",
-  "clientSecret": "secret",
-  "redirectUri": "https://example.ru/redirect"
-}
-```
-
+ 
 #### Сущность «OAuth 2.0 Токены» (OAuth 2.0 Tokens)
 
 **Описание:** токены, используемые для аутентификации и авторизации пользователя.
@@ -104,7 +85,7 @@ flowchart
 | lastName | String | Фамилия пользователя. |
 | dateOfBirth | Date | Дата рождения пользователя. |
 | gender | Enum | Пол пользователя: мужской, женский. |
-| avatar | String | URL изображения профиля пользователя. |
+| profilePicture | String | URL изображения профиля пользователя. |
 | preferredLanguage | String | Предпочитаемый язык пользователя. |
 | region | String | Регион пользователя. |
 | sportPreferences | Array | Предпочтения пользователя в спорте (например, футбол, баскетбол, йога). |
