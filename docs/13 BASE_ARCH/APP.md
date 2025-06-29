@@ -26,9 +26,9 @@ flowchart
 | userId | UUID | связь с пользователем, которому принадлежит устройство |
 | deviceType | string | например, "HealthConnect", "AppleHealth" и т.д. |
 | deviceName | string | человеко-читаемое имя, задаваемое пользователем |
-| status | string | например, "активно", "отключено |
+| status | string | например, "активно", "отключено" |
 | lastSyncDate | Date | дата последней синхронизации данных |
-| updatedAt | Date | временные метки |
+
 
 
 #### Сущность «Даннаые с устройства» (DeviceData)
