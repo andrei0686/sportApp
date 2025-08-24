@@ -15,4 +15,7 @@
 1. [ADRs](11%20ADRs/README.md)
 1. [Сценарии использования](12%20USECASE.md)
 1. [Базовая архитектура](13%20BASE_ARCH/readme.md) 
+1. [Основные представления](14%20PRESENTATIONS/readme.md) 
+1. [Анализ рисков архитектуры](15%20ANALISYS.md) 
+1. [Стоимость владения системой](16%20COST.md) 
 1. [API](https://andrei0686.github.io/sportApp/) или [swagger file](v1.yaml) ( v1.yaml )
